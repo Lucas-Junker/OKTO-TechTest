@@ -6,16 +6,28 @@ using UnityEngine.UIElements;
 
 public class MainUIBehaviour : MonoBehaviour
 {
-    public float MoveThreshold;
+    [Header("Threshold to move slide (in px)")]
+    public float MoveThreshold = 3;
+    [Header("Factor to increase move feedback")]
+    public float MoveFactor = 10;
+    public RenderTexture RoomRT1;
+    public RenderTexture RoomRT2;
 
+    
+    // UI parts
     private VisualElement _reactiveElement;
+    private VisualElement _slide1;
+    private VisualElement _slide2;
+
+    // Gestures params
     private Vector3 _lastPointerPosition;
-    private float _squaredThreshold;
 
     private void OnEnable()
     {
         VisualElement rootVisualElement = GetComponent<UIDocument>().rootVisualElement;
         _reactiveElement = rootVisualElement.Q("TopPart");
+        _slide1 = _reactiveElement.Q("Slide1");
+        _slide2 = _reactiveElement.Q("Slide2");
         _reactiveElement.RegisterCallback<GeometryChangedEvent>(Init);
     }
 
@@ -23,18 +35,18 @@ public class MainUIBehaviour : MonoBehaviour
     {
         _reactiveElement.UnregisterCallback<GeometryChangedEvent>(Init);
         var height = _reactiveElement.resolvedStyle.height;
-        _reactiveElement.Q("Slide1").style.height = height;
-        Debug.Log(_reactiveElement.Q("Slide1").style.height);
-        _reactiveElement.Q("Slide2").style.height = height;
-        _reactiveElement.Q("Slide3").style.height = height;
-        _reactiveElement.RegisterCallback<PointerDownEvent>(OnPointerDownCallback);
-    }
+        var width = _reactiveElement.resolvedStyle.width;
 
-    private void Start()
-    {
-        // Using squared threshold to avoir sqrRoot computation
-        // during pointer move
-        _squaredThreshold = MoveThreshold * MoveThreshold;
+        _slide1.style.height = height;
+        _slide2.style.height = height;
+        _reactiveElement.RegisterCallback<PointerDownEvent>(OnPointerDownCallback);
+
+        // Resize Render textures to screen size
+        RoomRT1.width = (int)width;
+        RoomRT1.height = (int)height;
+        RoomRT2.width = (int)width;
+        RoomRT2.height = (int)height;
+
     }
 
     private void OnPointerDownCallback(PointerDownEvent evt)
@@ -60,12 +72,13 @@ public class MainUIBehaviour : MonoBehaviour
     {
         // We don't do anything if the pointer has move less than
         // the threshold
-        // Using squared threshold to avoir sqrRoot computation
-        // during pointer move
-        Vector3 shift = evt.position - _lastPointerPosition;
-        if (shift.sqrMagnitude >= _squaredThreshold)
+        float yShift = (evt.position - _lastPointerPosition).y;
+        if (Mathf.Abs(yShift) >= MoveThreshold)
         {
-            Debug.Log("Move");
+            float factorizedMove = yShift * MoveFactor;
+            float newSlide1Top = _slide1.resolvedStyle.top + factorizedMove;
+            _slide1.style.top = newSlide1Top;
+            _slide2.style.top = newSlide1Top;
         }
 
         _lastPointerPosition = evt.position;

@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="MainContainer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+        <ui:VisualElement name="TopPart" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/UI/Images/bkg.jpg?fileID=2800000&amp;guid=14a72384f85f33c44bd5184f9340d441&amp;type=3#bkg&apos;); -unity-background-scale-mode: scale-and-crop; overflow: visible;" />
+        <ui:VisualElement name="BottomPart" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); height: 10%;" />
+    </ui:VisualElement>
+</ui:UXML>
