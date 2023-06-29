@@ -14,7 +14,19 @@ public class MainUIBehaviour : MonoBehaviour
 
     private void OnEnable()
     {
-        _reactiveElement = GetComponent<UIDocument>().rootVisualElement.Q("TopPart");
+        VisualElement rootVisualElement = GetComponent<UIDocument>().rootVisualElement;
+        _reactiveElement = rootVisualElement.Q("TopPart");
+        _reactiveElement.RegisterCallback<GeometryChangedEvent>(Init);
+    }
+
+    private void Init(GeometryChangedEvent evt)
+    {
+        _reactiveElement.UnregisterCallback<GeometryChangedEvent>(Init);
+        var height = _reactiveElement.resolvedStyle.height;
+        _reactiveElement.Q("Slide1").style.height = height;
+        Debug.Log(_reactiveElement.Q("Slide1").style.height);
+        _reactiveElement.Q("Slide2").style.height = height;
+        _reactiveElement.Q("Slide3").style.height = height;
         _reactiveElement.RegisterCallback<PointerDownEvent>(OnPointerDownCallback);
     }
 
