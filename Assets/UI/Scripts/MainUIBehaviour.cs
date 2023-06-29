@@ -16,24 +16,29 @@ public class MainUIBehaviour : MonoBehaviour
 
     public RenderTexture RoomRT1;
     public RenderTexture RoomRT2;
+    public Room Room1;
+    public Room Room2;
+    public SlideDataSettings Settings;
 
     
     // UI parts
     private VisualElement _reactiveElement;
-    private VisualElement _slide1;
-    private VisualElement _slide2;
 
     // Gestures params
     private Vector3 _lastPointerPosition;
     private float _slideHeight;
     private float _cumulatedShift;
+    private int _currentIndex = 0;
+    private Room _activeRoom;
+    private RenderTexture _activeRT;
+    private int _preparedIndex = 1;
 
     private void OnEnable()
     {
         VisualElement rootVisualElement = GetComponent<UIDocument>().rootVisualElement;
         _reactiveElement = rootVisualElement.Q("TopPart");
-        _slide1 = _reactiveElement.Q("Slide1");
-        _slide2 = _reactiveElement.Q("Slide2");
+        Room1.UIElement = _reactiveElement.Q("Slide1");
+        Room2.UIElement = _reactiveElement.Q("Slide2");
         _reactiveElement.RegisterCallback<GeometryChangedEvent>(Init);
     }
 
@@ -44,8 +49,8 @@ public class MainUIBehaviour : MonoBehaviour
         var width = _reactiveElement.resolvedStyle.width;
 
         _slideHeight = height;
-        _slide1.style.height = height;
-        _slide2.style.height = height;
+        Room1.UIElement.style.height = height;
+        Room2.UIElement.style.height = height;
         _reactiveElement.RegisterCallback<PointerDownEvent>(OnPointerDownCallback);
 
         // Resize Render textures to screen size
@@ -53,6 +58,45 @@ public class MainUIBehaviour : MonoBehaviour
         RoomRT1.height = (int)height;
         RoomRT2.width = (int)width;
         RoomRT2.height = (int)height;
+
+        _activeRoom = Room1;
+        SlideData data = Settings.SlideDataList[_currentIndex];
+        _activeRoom.SetBackground(data.Background);
+        _activeRoom.SetDancer(data.Dancer, data.Dance);
+
+        data = Settings.SlideDataList[_currentIndex < Settings.SlideDataList.Count - 1 ? _currentIndex + 1 : 0];
+        Room2.SetBackground(data.Background);
+        Room2.SetDancer(data.Dancer, data.Dance);
+
+    }
+
+    private Room GetInactiveRoom() => _activeRoom == Room1 ? Room2 : Room1;
+
+    private int GetPreviousIndex() => _currentIndex > 0 ? _currentIndex - 1 : Settings.SlideDataList.Count - 1;
+    private int GetNextIndex() => _currentIndex < Settings.SlideDataList.Count - 1 ? _currentIndex + 1 : 0;
+
+    private void PrepareSlide(int index, bool up)
+    {
+        if (_preparedIndex == index)
+            return;
+
+        _preparedIndex = index;
+
+        SlideData data = Settings.SlideDataList[index];
+
+        Room room = GetInactiveRoom();
+        room.SetBackground(data.Background);
+        room.SetDancer(data.Dancer, data.Dance);
+        if (up)
+        {
+            Debug.Log("Prepare previous slide");
+            room.ShiftYBy -= _slideHeight * 2;
+        }
+        else
+        {
+            Debug.Log("Prepare next slide");
+            room.ShiftYBy += _slideHeight * 2;
+        }
 
     }
 
@@ -71,7 +115,8 @@ public class MainUIBehaviour : MonoBehaviour
     private void OnPointerUpCallback(PointerUpEvent evt)
     {
         // On up we recenter the current slide if moved
-        StartCoroutine(SlideTransitionCoroutine(-_cumulatedShift));
+        StartCoroutine(SlideMoveCoroutine(-_cumulatedShift));
+        _cumulatedShift = 0;
     }
 
     private void OnPointerMoveCallback(PointerMoveEvent evt)
@@ -86,14 +131,27 @@ public class MainUIBehaviour : MonoBehaviour
             {
                 float factorizedMove = yShift * MoveFactor;
                 _cumulatedShift += factorizedMove;
-                float newSlide1Top = _slide1.resolvedStyle.top + factorizedMove;
-                _slide1.style.top = newSlide1Top;
-                _slide2.style.top = newSlide1Top;
+
+                if (_cumulatedShift > 0)
+                {
+                    Debug.Log("Move up");
+                    PrepareSlide(GetPreviousIndex(), up: true);
+                }
+                else if (_cumulatedShift < 0)
+                {
+                    Debug.Log("Move down");
+                    PrepareSlide(GetNextIndex(), up: false);
+                }
+
+                _activeRoom.ShiftYBy += factorizedMove;
+                Room inactiveRoom = GetInactiveRoom();
+                inactiveRoom.ShiftYBy += factorizedMove;
             }
             else
             {
                 float targetHeight = _slideHeight * Mathf.Sign(yShift) - _cumulatedShift;
                 _cumulatedShift = 0f;
+                Debug.Log("Transition to slide");
                 StartCoroutine(SlideTransitionCoroutine(targetHeight));
             }
         }
@@ -104,31 +162,41 @@ public class MainUIBehaviour : MonoBehaviour
     private static float InExpo(float t) => (float)Math.Pow(2, 10 * (t - 1));
     private static float OutExpo(float t) => 1 - InExpo(1 - t);
 
-    private IEnumerator SlideTransitionCoroutine(float targetHeight)
+    private IEnumerator SlideMoveCoroutine(float targetHeight)
     {
         // No interaction during transition
         _reactiveElement.UnregisterCallback<PointerUpEvent>(OnPointerUpCallback);
         _reactiveElement.UnregisterCallback<PointerMoveEvent>(OnPointerMoveCallback);
         _reactiveElement.UnregisterCallback<PointerDownEvent>(OnPointerDownCallback);
 
+        Room inactiveRoom = GetInactiveRoom();
         float timeElapsed = 0;
-        float startPos = _slide1.resolvedStyle.top;
-        
+        float startPos1 = _activeRoom.UIElement.resolvedStyle.top;
+        float startPos2 = inactiveRoom.UIElement.resolvedStyle.top;
+
         while (timeElapsed < TransitionDuration)
         {
             // Using Out Expo easing for slide
-            float newSlideTop = startPos + (OutExpo(timeElapsed) * targetHeight);
-            _slide1.style.top = newSlideTop;
-            _slide2.style.top = newSlideTop;
+            float shift = OutExpo(timeElapsed) * targetHeight;
+            _activeRoom.UIElement.style.top = startPos1 + shift;
+            inactiveRoom.UIElement.style.top = startPos2 + shift;
             yield return null;
             timeElapsed += Time.deltaTime;
         }
-        
+
         // just in case we over- or undershoot the animation
-        _slide1.style.top = startPos + targetHeight;
-        _slide2.style.top = startPos + targetHeight;
+        _activeRoom.UIElement.style.top = startPos1 + targetHeight;
+        inactiveRoom.UIElement.style.top = startPos2 + targetHeight;
 
         // Bind pointer down
         _reactiveElement.RegisterCallback<PointerDownEvent>(OnPointerDownCallback);
+    }
+
+    private IEnumerator SlideTransitionCoroutine(float targetHeight)
+    {
+        yield return SlideMoveCoroutine(targetHeight);
+
+        _activeRoom = GetInactiveRoom();
+        _currentIndex = _preparedIndex;
     }
 }
