@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c6ebf29f983d514dbcee9918ee70fcb, type: 3}
+  m_Name: Slide Data Settings
+  m_EditorClassIdentifier: 
+  SlideDataList:
+  - Dancer: {fileID: 3866295591018637140, guid: 1bb40597c1f6d2e4b9eb1f1743533089,
+      type: 3}
+    Dance: Salsa
+    Background: {fileID: 2800000, guid: 14a72384f85f33c44bd5184f9340d441, type: 3}
+  - Dancer: {fileID: 3866295591018637140, guid: d8bdec97fdcad9844a67092c2cc62448,
+      type: 3}
+    Dance: Samba
+    Background: {fileID: 2800000, guid: 95b082c4a22db2a4aabf35179bb2e504, type: 3}
+  - Dancer: {fileID: 3866295591018637140, guid: 027a8be8d32c6a5408ec7349315a7713,
+      type: 3}
+    Dance: Silly
+    Background: {fileID: 2800000, guid: d051ee5d34910b047ba9f24162f19b51, type: 3}
