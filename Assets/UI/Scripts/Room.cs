@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
+/// <summary>
+/// Handle display of slide data
+/// </summary>
 public class Room : MonoBehaviour
 {
     public Transform CharacterHolder;
@@ -31,7 +34,7 @@ public class Room : MonoBehaviour
         // Set bkg
         UIElement.style.backgroundImage = new StyleBackground(data.Background);
 
-        // Set dancer
+        // Set (instantiate) dancer
         if (CharacterHolder.childCount > 0)
             Destroy(CharacterHolder.GetChild(0).gameObject);
 
@@ -46,6 +49,7 @@ public class Room : MonoBehaviour
         _songNameElt.text = data.SongName;
     }
 
+    // Store position changes in ShiftYBy to apply it only once per frame.
     private void LateUpdate()
     {
         UIElement.style.top = UIElement.resolvedStyle.top + ShiftYBy;
