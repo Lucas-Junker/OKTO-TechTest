@@ -36,8 +36,8 @@ public class MainUIBehaviour : MonoBehaviour
     {
         VisualElement rootVisualElement = GetComponent<UIDocument>().rootVisualElement;
         _reactiveElement = rootVisualElement.Q("TopPart");
-        Room1.UIElement = _reactiveElement.Q("Slide1");
-        Room2.UIElement = _reactiveElement.Q("Slide2");
+        Room1.SetVisualElement(_reactiveElement.Q("Slide1"));
+        Room2.SetVisualElement(_reactiveElement.Q("Slide2"));
         _reactiveElement.RegisterCallback<GeometryChangedEvent>(Init);
     }
 
@@ -60,13 +60,10 @@ public class MainUIBehaviour : MonoBehaviour
 
         _activeRoom = Room1;
         SlideData data = Settings.SlideDataList[_currentIndex];
-        _activeRoom.SetBackground(data.Background);
-        _activeRoom.SetDancer(data.Dancer, data.Dance);
+        _activeRoom.SetSlideData(data);
 
         data = Settings.SlideDataList[_currentIndex < Settings.SlideDataList.Count - 1 ? _currentIndex + 1 : 0];
-        Room2.SetBackground(data.Background);
-        Room2.SetDancer(data.Dancer, data.Dance);
-
+        Room2.SetSlideData(data);
     }
 
     private Room GetInactiveRoom() => _activeRoom == Room1 ? Room2 : Room1;
@@ -84,8 +81,7 @@ public class MainUIBehaviour : MonoBehaviour
         SlideData data = Settings.SlideDataList[index];
 
         Room room = GetInactiveRoom();
-        room.SetBackground(data.Background);
-        room.SetDancer(data.Dancer, data.Dance);
+        room.SetSlideData(data);
         if (up)
             room.ShiftYBy -= _slideHeight * 2;
         else

@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="SlideUI" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+        <ui:Label tabindex="-1" text="Player One" display-tooltip-when-elided="true" name="PlayerName" style="position: absolute; left: 40px; top: 35px; font-size: 40px; color: rgb(255, 255, 255); text-shadow: 0 2px 0 rgb(41, 41, 41);" />
+        <ui:Label tabindex="-1" text="The Twist" display-tooltip-when-elided="true" name="DanceName" style="position: absolute; top: 100px; left: 40px; color: rgb(255, 255, 255); font-size: 30px; text-shadow: 0 2px 0 rgb(41, 41, 41);" />
+        <ui:Button text="DANCE IT" display-tooltip-when-elided="true" style="position: absolute; top: auto; left: 40px; bottom: 40px; color: rgb(255, 255, 255); font-size: 90px; background-color: rgb(0, 32, 255); border-top-left-radius: 30px; border-bottom-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; text-shadow: 0 9.900001px 0 rgb(51, 51, 51); -unity-text-outline-width: 2px; -unity-text-outline-color: rgb(0, 0, 0); letter-spacing: -8px; -unity-font-style: bold; padding-left: 31px; padding-right: 31px; padding-top: 31px; padding-bottom: 31px;" />
+        <ui:VisualElement name="Album" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; right: 40px; bottom: 50px; width: 120px; height: 120px; background-image: url(&apos;project://database/Assets/UI/Images/album.jpg?fileID=2800000&amp;guid=2061810227d31b44fbaadb9eb72aa200&amp;type=3#album&apos;);" />
+        <ui:Label tabindex="-1" text="Mastodon" display-tooltip-when-elided="true" name="ArtistName" style="position: absolute; bottom: 105px; right: 180px; color: rgb(255, 255, 255); font-size: 25px; -unity-text-align: upper-right; text-shadow: 0 2px 0 rgb(41, 41, 41);" />
+        <ui:Label tabindex="-1" text="High Road" display-tooltip-when-elided="true" name="SongName" style="position: absolute; bottom: 75px; right: 180px; color: rgb(255, 255, 255); -unity-text-align: upper-right; font-size: 20px; text-shadow: 0 2px 0 rgb(41, 41, 41);" />
+    </ui:VisualElement>
+</ui:UXML>

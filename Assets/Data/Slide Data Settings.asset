@@ -17,11 +17,26 @@ MonoBehaviour:
       type: 3}
     Dance: Salsa
     Background: {fileID: 2800000, guid: 14a72384f85f33c44bd5184f9340d441, type: 3}
+    PlayerName: Player One
+    DanceName: Salsa
+    AlbumImage: {fileID: 2800000, guid: 2061810227d31b44fbaadb9eb72aa200, type: 3}
+    ArtistName: Mastodon
+    SongName: High Road
   - Dancer: {fileID: 3866295591018637140, guid: d8bdec97fdcad9844a67092c2cc62448,
       type: 3}
     Dance: Samba
     Background: {fileID: 2800000, guid: 95b082c4a22db2a4aabf35179bb2e504, type: 3}
+    PlayerName: Player Two
+    DanceName: Samba
+    AlbumImage: {fileID: 2800000, guid: f7e6e509befa31b4bbb51a5a5fcb5d4e, type: 3}
+    ArtistName: Leprous
+    SongName: Castaway Angels
   - Dancer: {fileID: 3866295591018637140, guid: 027a8be8d32c6a5408ec7349315a7713,
       type: 3}
     Dance: Silly
     Background: {fileID: 2800000, guid: d051ee5d34910b047ba9f24162f19b51, type: 3}
+    PlayerName: Player Three
+    DanceName: The Silly
+    AlbumImage: {fileID: 2800000, guid: 872eda65b3808d34baaaf520c1f35c32, type: 3}
+    ArtistName: Gaerea
+    SongName: Arson
