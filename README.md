@@ -47,3 +47,11 @@ But I don't know if it really works well with UI Toolkit, and I have a single an
 
 To assure scalability, I designed a data system base on a liste of "slide" with for each entry several informations : background image, dancer prefab, dance trigger name for the animator, ...
 When I prepare a slide, I just retrieve these data from the list and setup the slide.
+
+# Final thoughts
+Regarding the test, I think the snapping of the slide after a transition might be smoothen, it's a bit rought as it is.
+I've tried the project on my phone and it seems to run smoothly.
+Now, the background is only a still picture, but if you ever want to render a full 3D scene, you might encounter performance issues.
+
+Regarding UI Toolkit, my feeling is that it is not versatile enough (yet ?) for this purpose. I spent more time dodging its limits than actually use it as intended.
+That's why I have heard from other devs about it and I tend to think the same. I will pursue my tests on it, but for a first try, I am not that much impressed.
