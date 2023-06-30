@@ -120,12 +120,19 @@ public class MainUIBehaviour : MonoBehaviour
         // to avoid parasite events.
         _interactiveElement.UnregisterCallback<PointerDownEvent>(OnPointerDownCallback);
         _interactiveElement.RegisterCallback<PointerUpEvent>(OnPointerUpCallback);
+        _interactiveElement.RegisterCallback<PointerLeaveEvent>(OnPointerLeaveCallback);
         _interactiveElement.RegisterCallback<PointerMoveEvent>(OnPointerMoveCallback);
     }
 
     private void OnPointerUpCallback(PointerUpEvent evt)
     {
         // On up we recenter the current slide if moved
+        StartCoroutine(SlideMoveCoroutine(0f));
+    }
+
+    private void OnPointerLeaveCallback(PointerLeaveEvent evt)
+    {
+        // On leave we recenter the current slide if moved
         StartCoroutine(SlideMoveCoroutine(0f));
     }
 
@@ -199,6 +206,7 @@ public class MainUIBehaviour : MonoBehaviour
     {
         // No interaction during transition
         _interactiveElement.UnregisterCallback<PointerUpEvent>(OnPointerUpCallback);
+        _interactiveElement.UnregisterCallback<PointerLeaveEvent>(OnPointerLeaveCallback);
         _interactiveElement.UnregisterCallback<PointerMoveEvent>(OnPointerMoveCallback);
         _interactiveElement.UnregisterCallback<PointerDownEvent>(OnPointerDownCallback);
 
