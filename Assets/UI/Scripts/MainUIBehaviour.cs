@@ -93,6 +93,8 @@ public class MainUIBehaviour : MonoBehaviour
 
     }
 
+    #region Event Callbacks
+
     private void OnPointerDownCallback(PointerDownEvent evt)
     {
         _lastPointerPosition = evt.position;
@@ -164,6 +166,10 @@ public class MainUIBehaviour : MonoBehaviour
         _lastPointerPosition = evt.position;
     }
 
+    #endregion Event Callbacks
+
+    #region Animations
+
     private float InCirc(float t) => -((float)Math.Sqrt(1 - t * t) - 1);
     private float OutCirc(float t) => 1 - InCirc(1 - t);
 
@@ -208,4 +214,6 @@ public class MainUIBehaviour : MonoBehaviour
         _currentIndex = _preparedIndex;
         _preparedIndex = temp;
     }
+
+    #endregion Animations
 }
